@@ -1,0 +1,24 @@
+# TorchBasics/basics 教程依赖
+# Python >= 3.9
+#
+# 安装（CPU 即可跑通教程）:
+#   pip install -r requirements.txt
+#
+# 如需 CUDA GPU 版，不要用上面这一条装 torch/torchvision，
+# 请按 https://pytorch.org/get-started/locally/ 选好 CUDA 后再装其余包。
+
+# --- 核心：教程代码直接 import ---
+# torch.accelerator（quickstart / tensor / buildmodel）需要 torch >= 2.5
+torch>=2.5.0
+# transforms.v2.ToImage/ToDtype + torchvision.io.decode_image 需要 torchvision >= 0.20
+# （与 torch 2.5 成对；pip 一般会装匹配版本）
+torchvision>=0.20.0
+
+numpy>=1.24
+matplotlib>=3.7
+pandas>=2.0
+pillow>=10.0
+
+# --- 可选：跑 basics_notebook/*.ipynb ---
+# jupyter>=1.0
+# ipykernel>=6.0
