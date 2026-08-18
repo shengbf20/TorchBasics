@@ -12,7 +12,9 @@
 构建神经网络
 ========================
 
-神经网络由对数据执行操作的层/模块组成。`torch.nn <https://pytorch.org/docs/stable/nn.html>`_ 命名空间提供了构建你自己的神经网络所需的全部构建块。PyTorch 中的每个模块都继承自 `nn.Module <https://pytorch.org/docs/stable/generated/torch.nn.Module.html>`_。神经网络本身也是一个模块，由其他模块（层）组成。这种嵌套结构使得构建和管理复杂架构变得很容易。
+神经网络由对数据执行操作的层/模块组成。`torch.nn <https://pytorch.org/docs/stable/nn.html>`_ 命名空间提供了构建你自己的神经网络所需的全部构建块。
+PyTorch 中的每个模块都继承自 `nn.Module <https://pytorch.org/docs/stable/generated/torch.nn.Module.html>`_。
+神经网络本身也是一个模块，由其他模块（层）组成。这种嵌套结构使得构建和管理复杂架构变得很容易。
 
 在接下来的章节中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。
 
@@ -43,18 +45,18 @@ print(f"Using {device} device")
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
-        self.flatten = nn.Flatten()
+        self.flatten = nn.Flatten() # 展平函数
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28*28, 512),
+            nn.Linear(28*28, 512), # 线性层，将 784 个像素值映射到 512 个隐藏单元
+            nn.ReLU(), # 激活函数，将 512 个隐藏单元映射到 512 个隐藏单元
+            nn.Linear(512, 512), # 线性层，将 512 个隐藏单元映射到 512 个隐藏单元
             nn.ReLU(),
-            nn.Linear(512, 512),
-            nn.ReLU(),
-            nn.Linear(512, 10),
+            nn.Linear(512, 10), # 线性层，将 512 个隐藏单元映射到 10 个输出单元
         )
 
     def forward(self, x):
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
+        x = self.flatten(x) # 将输入的 2D 图像（28x28 像素）展平为一维数组（784 个像素）
+        logits = self.linear_relu_stack(x) # 将展平后的输入通过线性层和激活函数，得到10个输出单元
         return logits
 
 ##############################################
@@ -137,9 +139,8 @@ print(f"After ReLU: {hidden1}")
 #################################################
 # nn.Sequential
 # ^^^^^^^^^^^^^^^^^^^^^^
-# `nn.Sequential <https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html>`_ 是一个有序的
-# 模块容器。数据会按照定义时的相同顺序依次通过所有模块。你可以使用
-# 顺序容器来快速组装一个类似 ``seq_modules`` 的网络。
+# `nn.Sequential <https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html>`_ 是一个有序的模块容器。
+# 数据会按照定义时的相同顺序依次通过所有模块。你可以使用顺序容器来快速组装一个类似 ``seq_modules`` 的网络。
 
 seq_modules = nn.Sequential(
     flatten,

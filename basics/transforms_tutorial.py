@@ -14,9 +14,11 @@
 
 数据并不总是以训练机器学习算法所需的最终处理形式出现。我们使用**数据变换**对数据进行一些处理，使其适合训练。
 
-所有 TorchVision 数据集都有两个参数：``transform`` 用于修改特征，``target_transform`` 用于修改标签，它们接受包含变换逻辑的可调用对象。`torchvision.transforms <https://pytorch.org/vision/stable/transforms.html>`_ 模块开箱即用地提供了几种常用的变换。
+所有 TorchVision 数据集都有两个参数：``transform`` 用于修改特征，``target_transform`` 用于修改标签，它们接受包含变换逻辑的可调用对象。
+`torchvision.transforms <https://pytorch.org/vision/stable/transforms.html>`_ 模块开箱即用地提供了几种常用的变换。
 
-FashionMNIST 的特征是 PIL Image 格式，标签是整数。为了训练，我们需要将特征转换为归一化的张量，将标签转换为独热编码（one-hot）张量。为了实现这些变换，我们使用 ``torchvision.transforms.v2`` API 以及 ``torch.nn.functional.one_hot``。
+FashionMNIST 的特征是 PIL Image 格式，标签是整数。为了训练，我们需要将特征转换为归一化的张量，将标签转换为独热编码（one-hot）张量。
+为了实现这些变换，我们使用 ``torchvision.transforms.v2`` API 以及 ``torch.nn.functional.one_hot``。
 """
 
 import torch
@@ -31,7 +33,7 @@ ds = datasets.FashionMNIST(
     transform=v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)]),
     target_transform=v2.Lambda(
         lambda y: F.one_hot(torch.tensor(y), num_classes=10).float()
-    ),
+    ), # 将整数标签转换为大小为 10 的独热编码张量（即数据集中标签的数量），然后将其转换为 ``float`` 以匹配预期的数据类型
 )
 
 #################################################
@@ -57,6 +59,8 @@ ds = datasets.FashionMNIST(
 target_transform = v2.Lambda(
     lambda y: F.one_hot(torch.tensor(y), num_classes=10).float()
 )
+
+# e.g. y = 5 -> F.one_hot(torch.tensor(y), num_classes=10).float() = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
 
 ######################################################################
 # --------------
