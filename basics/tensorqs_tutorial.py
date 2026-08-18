@@ -45,6 +45,23 @@ x_data = torch.tensor(data)
 np_array = np.array(data)
 x_np = torch.from_numpy(np_array)
 
+# 张量转 NumPy 数组
+# arr = x_np.numpy()
+# 张量转 CPU 上的 NumPy 数组
+# arr = x.cpu().numpy()
+# 张量转 CPU 上的 NumPy 数组，并释放梯度
+# arr = x.detach().numpy()
+# 张量转 CPU 上的 NumPy 数组，并释放梯度，并使用 dtype 指定数据类型
+# arr = x.detach().cpu().numpy().astype(np.float32)
+# 张量转 CPU 上的 NumPy 数组，并释放梯度，并使用 dtype 指定数据类型，并指定形状
+# arr = x.detach().cpu().numpy().astype(np.float32).reshape(2,2)
+# 张量转 CPU 上的 NumPy 数组，并释放梯度，并使用 dtype 指定数据类型，并指定形状，并指定步长
+# arr = x.detach().cpu().numpy().astype(np.float32).reshape(2,2).strides(2,1)
+# 张量转 CPU 上的 NumPy 数组，并释放梯度，并使用 dtype 指定数据类型，并指定形状，并指定步长，并指定偏移量
+# arr = x.detach().cpu().numpy().astype(np.float32).reshape(2,2).strides(2,1).offset(0)
+# 张量转 CPU 上的 NumPy 数组，并释放梯度，并使用 dtype 指定数据类型，并指定形状，并指定步长，并指定偏移量，并指定步长
+# arr = x.detach().cpu().numpy().astype(np.float32).reshape(2,2).strides(2,1).offset(0).step(1)
+
 
 ###############################################################
 # **从另一个张量创建：**
@@ -53,6 +70,10 @@ x_np = torch.from_numpy(np_array)
 
 x_ones = torch.ones_like(x_data) # 保留 x_data 的属性
 print(f"Ones Tensor: \n {x_ones} \n")
+
+# 创建随机向量，范围在 [0, 100) 之间
+x_rand = torch.rand(x_data.shape) * 100
+print(f"Random Tensor: \n {x_rand} \n")
 
 x_rand = torch.rand_like(x_data, dtype=torch.float) # 覆盖 x_data 的数据类型
 print(f"Random Tensor: \n {x_rand} \n")
@@ -99,8 +120,7 @@ print(f"Device tensor is stored on: {tensor.device}")
 # 张量上的操作
 # ~~~~~~~~~~~~~~~~~~~~~~~
 #
-# 超过 1200 种张量运算，包括算术、线性代数、矩阵操作（转置、
-# 索引、切片）、采样等等，
+# 超过 1200 种张量运算，包括算术、线性代数、矩阵操作（转置、索引、切片）、采样等等，
 # 在 `这里 <https://pytorch.org/docs/stable/torch.html>`__ 有全面介绍。
 #
 # 这些操作中的每一个都可以在 CPU 和 `加速器 <https://pytorch.org/docs/stable/torch.html#accelerators>`__
@@ -136,6 +156,11 @@ print(tensor)
 # 这是另一个拼接张量的算子，与 ``torch.cat`` 略有不同。
 t1 = torch.cat([tensor, tensor, tensor], dim=1)
 print(t1)
+print(t1.shape) # (3, 4)
+
+t2 = torch.stack([tensor, tensor], dim=0)
+print(t2)
+print(t2.shape) # (2, 3, 4)
 
 
 ######################################################################

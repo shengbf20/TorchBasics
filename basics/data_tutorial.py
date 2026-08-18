@@ -120,24 +120,26 @@ import pandas as pd
 from torchvision.io import decode_image
 
 class CustomImageDataset(Dataset):
+    """自定义数据集类"""
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
-        self.img_labels = pd.read_csv(annotations_file)
-        self.img_dir = img_dir
-        self.transform = transform
-        self.target_transform = target_transform
+        self.img_labels = pd.read_csv(annotations_file) # 读取标签文件
+        self.img_dir = img_dir # 图像目录
+        self.transform = transform # 对图像的变换函数
+        self.target_transform = target_transform # 对标签的变换函数
 
     def __len__(self):
-        return len(self.img_labels)
+        return len(self.img_labels) # 返回数据集的长度
 
     def __getitem__(self, idx):
-        img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0])
-        image = decode_image(img_path)
-        label = self.img_labels.iloc[idx, 1]
+        """获取数据集中的一个样本"""
+        img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0]) # 获取图像路径
+        image = decode_image(img_path) # 来自 torchvision.io：根据文件路径读盘上的图片（jpg/png 等），解码成 torch.Tensor
+        label = self.img_labels.iloc[idx, 1] # 获取标签
         if self.transform:
-            image = self.transform(image)
+            image = self.transform(image) # 应用图像变换，输出仍是图像相关张量，但已按训练需要改过
         if self.target_transform:
-            label = self.target_transform(label)
-        return image, label
+            label = self.target_transform(label) # 应用标签变换，输出仍是标签相关张量，但已按训练需要改过
+        return image, label # 返回图像和标签
 
 
 #################################################################
@@ -202,10 +204,10 @@ def __getitem__(self, idx):
 #################################################################
 # 使用 DataLoader 为训练准备数据
 # -------------------------------------------------
-# ``Dataset`` 每次检索数据集中的一个样本的特征和标签。在训练模型时，我们通常希望
-# 以小批量（"minibatches"）的方式传递样本，在每个 epoch 重新打乱数据以减少模型过拟合，并使用 Python 的 ``multiprocessing`` 来
-# 加速数据检索。
-#
+# ``Dataset`` 每次检索数据集中的一个样本的特征和标签。在训练模型时，
+# 我们通常希望以小批量（"minibatches"）的方式传递样本，在每个 epoch 重新打乱数据以减少模型过拟合，
+# 并使用 Python 的 ``multiprocessing`` 来加速数据检索。
+
 # ``DataLoader`` 是一个可迭代对象，通过简单的 API 为我们抽象了这种复杂性。
 
 from torch.utils.data import DataLoader
@@ -222,7 +224,7 @@ test_dataloader = DataLoader(test_data, batch_size=64, shuffle=True)
 # 由于我们指定了 ``shuffle=True``，在遍历完所有批次后数据会被重新打乱（如需更细粒度地控制
 # 数据加载顺序，请参阅 `采样器 <https://pytorch.org/docs/stable/data.html#data-loading-order-and-sampler>`_）。
 
-# 显示图像和标签。
+# 显示图像和标签：
 train_features, train_labels = next(iter(train_dataloader))
 print(f"Feature batch shape: {train_features.size()}")
 print(f"Labels batch shape: {train_labels.size()}")
